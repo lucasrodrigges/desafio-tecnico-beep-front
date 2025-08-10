@@ -38,7 +38,11 @@ const closeModal = () => {
           <span class="score">{{ score }} pontos</span>
         </div>
         <span class="separator">·</span>
-        <div class="meta-item comments-clickable" @click="openCommentsModal">
+        <div
+          class="meta-item"
+          :class="{ 'comments-clickable': kids && kids.length > 0, 'comments-disabled': !kids || kids.length === 0 }"
+          @click="kids && kids.length > 0 ? openCommentsModal : null"
+        >
           <MessageSquare :size="14" />
           <span class="comments">{{ kids?.length || 0 }} comentários</span>
         </div>
