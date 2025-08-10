@@ -30,7 +30,7 @@ const fetchComments = async () => {
 
   try {
     const response = await fetch(
-      `http://localhost:3000/api/v1/hackernews/${props.storyId}/relevant_comments`,
+      `${import.meta.env.VITE_API_BASE_URL}/hackernews/${props.storyId}/relevant_comments`,
     )
     const data = await response.json()
     comments.value = data

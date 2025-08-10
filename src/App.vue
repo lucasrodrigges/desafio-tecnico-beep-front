@@ -28,7 +28,7 @@ async function fetchStories() {
   loading.value = true
   error.value = ''
   try {
-    const res = await fetch('http://localhost:3000/api/v1/hackernews/top_stories')
+    const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/hackernews/top_stories`)
     if (!res.ok) throw new Error('Erro ao buscar notícias')
     stories.value = await res.json()
   } catch (e: any) {
@@ -48,7 +48,7 @@ async function searchStories(query: string) {
   error.value = ''
   try {
     const res = await fetch(
-      `http://localhost:3000/api/v1/hackernews/search?query=${encodeURIComponent(query)}`,
+      `${import.meta.env.VITE_API_BASE_URL}/hackernews/search?query=${encodeURIComponent(query)}`,
     )
     if (!res.ok) throw new Error('Erro ao buscar notícias')
     stories.value = await res.json()
@@ -80,7 +80,11 @@ function connectCable() {
     cable.disconnect()
     cable = null
   }
-  cable = ActionCable.createConsumer('ws://localhost:3000/cable')
+  const wsUrl = import.meta.env.VITE_API_BASE_URL.replace('http://', 'ws://').replace(
+    '/api/v1',
+    '/cable',
+  )
+  cable = ActionCable.createConsumer(wsUrl)
   subscription = cable.subscriptions.create(
     { channel: 'TopStoriesChannel' },
     {
@@ -143,16 +147,10 @@ onUnmounted(() => {
         </span>
       </div>
 
-      <!-- Barra de busca -->
       <div class="search-container">
         <div class="search-input-wrapper">
           <Search :size="20" class="search-icon" />
-          <input
-            v-model="searchQuery"
-            type="text"
-            placeholder="Buscar notícias..."
-            class="search-input"
-          />
+          <input v-model="searchQuery" type="text" placeholder="Buscar..." class="search-input" />
           <div v-if="isSearching" class="search-loading">
             <Loader2 :size="16" class="spinner-icon" />
           </div>
