@@ -1,0 +1,96 @@
+:root {
+  /* Backgrounds */
+  --bg-default: #ffffff;
+  --bg-muted: #f6f8fa;
+  --bg-subtle: #f1f3f4;
+  --bg-overlay: rgba(255, 255, 255, 0.9);
+
+  /* Text colors */
+  --fg-default: #1f2328;
+  --fg-muted: #656d76;
+  --fg-subtle: #8b949e;
+  --fg-on-emphasis: #ffffff;
+
+  /* Border colors */
+  --border-default: #d1d9e0;
+  --border-muted: #d8dee4;
+  --border-subtle: #f1f3f4;
+
+  /* Button colors */
+  --btn-primary-bg: #1f883d;
+  --btn-primary-hover-bg: #1a7f37;
+  --btn-secondary-bg: #f6f8fa;
+  --btn-secondary-hover-bg: #f3f4f6;
+  --btn-secondary-border: #d1d9e0;
+
+  /* Link colors */
+  --link-fg: #0969da;
+  --link-hover-fg: #0550ae;
+
+  /* Status colors */
+  --accent-fg: #0969da;
+  --accent-emphasis: #0550ae;
+  --success-fg: #1a7f37;
+  --attention-fg: #9a6700;
+  --severe-fg: #bc4c00;
+  --danger-fg: #d1242f;
+  --danger-emphasis: #a40e26;
+
+  /* Interactive colors */
+  --neutral-muted: rgba(175, 184, 193, 0.2);
+  --accent-muted: rgba(84, 174, 255, 0.12);
+  --success-muted: rgba(74, 194, 107, 0.15);
+  --attention-muted: rgba(255, 212, 0, 0.15);
+  --danger-muted: rgba(255, 129, 130, 0.15);
+
+  /* Shadows */
+  --shadow-small: 0 1px 0 rgba(31, 35, 40, 0.04);
+  --shadow-medium: 0 3px 6px rgba(140, 149, 159, 0.15);
+  --shadow-large: 0 8px 24px rgba(140, 149, 159, 0.2);
+  --shadow-inset: inset 0 1px 0 rgba(208, 215, 222, 0.2);
+
+  /* Overlay colors */
+  --overlay-backdrop: rgba(31, 35, 40, 0.5);
+  --header-bg: rgba(255, 255, 255, 0.85);
+
+  /* Code colors */
+  --code-bg: #f6f8fa;
+  --code-border: #d1d9e0;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg-default: #0d1117;
+    --bg-muted: #161b22;
+    --bg-subtle: #21262d;
+    --bg-overlay: rgba(13, 17, 23, 0.9);
+
+    --fg-default: #e6edf3;
+    --fg-muted: #7d8590;
+    --fg-subtle: #6e7681;
+    --fg-on-emphasis: #ffffff;
+
+    --border-default: #30363d;
+    --border-muted: #21262d;
+    --border-subtle: #21262d;
+
+    --btn-primary-bg: #238636;
+    --btn-primary-hover-bg: #2ea043;
+    --btn-secondary-bg: #21262d;
+    --btn-secondary-hover-bg: #30363d;
+    --btn-secondary-border: #30363d;
+
+    --link-fg: #58a6ff;
+    --link-hover-fg: #79c0ff;
+
+    --accent-fg: #58a6ff;
+    --accent-emphasis: #1f6feb;
+    --success-fg: #3fb950;
+    --attention-fg: #d29922;
+    --severe-fg: #db6d28;
+    --danger-fg: #f85149;
+    --danger-emphasis: #da3633;
+
+    --header-bg: rgba(13, 17, 23, 0.85);
+  }
+}
