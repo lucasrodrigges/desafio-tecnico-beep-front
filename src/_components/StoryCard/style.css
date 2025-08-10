@@ -27,6 +27,18 @@
   gap: 4px;
 }
 
+.comments-clickable {
+  cursor: pointer;
+  transition: color 0.2s ease;
+  border-radius: 4px;
+  padding: 2px 4px;
+}
+
+.comments-clickable:hover {
+  color: var(--link-fg);
+  background-color: var(--bg-muted);
+}
+
 .author {
   font-weight: 500;
 }

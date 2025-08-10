@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { defineProps } from 'vue'
+import { defineProps, ref } from 'vue'
 import { User, TrendingUp, ExternalLink, MessageSquare } from 'lucide-vue-next'
+import CommentsModal from '../CommentsModal/CommentsModal.vue'
 import './style.css'
 
 const props = defineProps<{
@@ -11,6 +12,16 @@ const props = defineProps<{
   score: number
   kids?: number[]
 }>()
+
+const isModalOpen = ref(false)
+
+const openCommentsModal = () => {
+  isModalOpen.value = true
+}
+
+const closeModal = () => {
+  isModalOpen.value = false
+}
 </script>
 
 <template>
@@ -27,7 +38,7 @@ const props = defineProps<{
           <span class="score">{{ score }} pontos</span>
         </div>
         <span class="separator">·</span>
-        <div class="meta-item">
+        <div class="meta-item comments-clickable" @click="openCommentsModal">
           <MessageSquare :size="14" />
           <span class="comments">{{ kids?.length || 0 }} comentários</span>
         </div>
@@ -40,5 +51,7 @@ const props = defineProps<{
         </a>
       </h3>
     </div>
+
+    <CommentsModal :is-open="isModalOpen" :story-id="id" @close="closeModal" />
   </li>
 </template>
