@@ -10,6 +10,7 @@ interface Story {
   url: string
   by: string
   score: number
+  kids?: number[]
 }
 
 const stories = ref<Story[]>([])

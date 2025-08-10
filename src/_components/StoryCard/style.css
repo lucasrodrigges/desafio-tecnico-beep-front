@@ -39,6 +39,10 @@
   color: var(--fg-muted);
 }
 
+.comments {
+  color: var(--fg-muted);
+}
+
 .story-title {
   margin: 0;
   font-size: 16px;

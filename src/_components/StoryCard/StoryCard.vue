@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { defineProps } from 'vue'
-import { User, TrendingUp, ExternalLink } from 'lucide-vue-next'
+import { User, TrendingUp, ExternalLink, MessageSquare } from 'lucide-vue-next'
 import './style.css'
 
 const props = defineProps<{
@@ -9,6 +9,7 @@ const props = defineProps<{
   url: string
   by: string
   score: number
+  kids?: number[]
 }>()
 </script>
 
@@ -24,6 +25,11 @@ const props = defineProps<{
         <div class="meta-item">
           <TrendingUp :size="14" />
           <span class="score">{{ score }} pontos</span>
+        </div>
+        <span class="separator">·</span>
+        <div class="meta-item">
+          <MessageSquare :size="14" />
+          <span class="comments">{{ kids?.length || 0 }} comentários</span>
         </div>
       </div>
 
