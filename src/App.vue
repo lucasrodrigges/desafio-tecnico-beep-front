@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from 'vue'
-import { Loader2, AlertCircle, Circle } from 'lucide-vue-next'
+import { ref, onMounted, onUnmounted, watch } from 'vue'
+import { Loader2, AlertCircle, Circle, Search } from 'lucide-vue-next'
 import StoryCard from './_components/StoryCard/StoryCard.vue'
 import * as ActionCable from '@rails/actioncable'
 import './App.css'
@@ -18,8 +18,11 @@ const stories = ref<Story[]>([])
 const loading = ref(true)
 const error = ref('')
 const online = ref(false)
+const searchQuery = ref('')
+const isSearching = ref(false)
 let cable: any = null
 let subscription: any = null
+let searchTimeout: number | null = null
 
 async function fetchStories() {
   loading.value = true
@@ -34,6 +37,41 @@ async function fetchStories() {
     loading.value = false
   }
 }
+
+async function searchStories(query: string) {
+  if (!query.trim()) {
+    await fetchStories()
+    return
+  }
+
+  isSearching.value = true
+  error.value = ''
+  try {
+    const res = await fetch(
+      `http://localhost:3000/api/v1/hackernews/search?query=${encodeURIComponent(query)}`,
+    )
+    if (!res.ok) throw new Error('Erro ao buscar notícias')
+    stories.value = await res.json()
+  } catch (e: any) {
+    error.value = e.message || 'Erro desconhecido'
+  } finally {
+    isSearching.value = false
+  }
+}
+
+function debouncedSearch(query: string) {
+  if (searchTimeout) {
+    clearTimeout(searchTimeout)
+  }
+
+  searchTimeout = setTimeout(() => {
+    searchStories(query)
+  }, 600)
+}
+
+watch(searchQuery, (newQuery) => {
+  debouncedSearch(newQuery)
+})
 
 function connectCable() {
   loading.value = true
@@ -55,7 +93,7 @@ function connectCable() {
         error.value = 'Desconectado do servidor.'
       },
       received(data: Story[]) {
-        if (data[0] !== stories.value[0]) {
+        if (data[0] !== stories.value[0] && !searchQuery) {
           stories.value = data
         }
       },
@@ -79,7 +117,12 @@ onMounted(async () => {
   connectCable()
 })
 
-onUnmounted(disconnectCable)
+onUnmounted(() => {
+  disconnectCable()
+  if (searchTimeout) {
+    clearTimeout(searchTimeout)
+  }
+})
 </script>
 
 <template>
@@ -98,6 +141,22 @@ onUnmounted(disconnectCable)
             class="animate-pulse"
           />
         </span>
+      </div>
+
+      <!-- Barra de busca -->
+      <div class="search-container">
+        <div class="search-input-wrapper">
+          <Search :size="20" class="search-icon" />
+          <input
+            v-model="searchQuery"
+            type="text"
+            placeholder="Buscar notícias..."
+            class="search-input"
+          />
+          <div v-if="isSearching" class="search-loading">
+            <Loader2 :size="16" class="spinner-icon" />
+          </div>
+        </div>
       </div>
     </header>
 

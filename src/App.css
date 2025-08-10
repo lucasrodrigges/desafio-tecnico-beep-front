@@ -148,4 +148,61 @@
   .title {
     font-size: 18px;
   }
+
+  .search-container {
+    padding: 0 16px 12px;
+  }
+}
+
+.status-indicator {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: var(--fg-muted);
+}
+
+.search-container {
+  padding: 0 20px 16px;
+}
+
+.search-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.search-icon {
+  position: absolute;
+  left: 12px;
+  color: var(--fg-muted);
+  z-index: 1;
+}
+
+.search-input {
+  width: 100%;
+  padding: 12px 12px 12px 44px;
+  border: 1px solid var(--border-default);
+  border-radius: 8px;
+  background: var(--bg-default);
+  color: var(--fg-default);
+  font-size: 14px;
+  transition: all 0.2s ease;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: var(--accent-fg);
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+}
+
+.search-input::placeholder {
+  color: var(--fg-muted);
+}
+
+.search-loading {
+  position: absolute;
+  right: 12px;
+  display: flex;
+  align-items: center;
 }
