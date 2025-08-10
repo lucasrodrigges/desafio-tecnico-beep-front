@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
-import { RefreshCw, Loader2, AlertCircle } from 'lucide-vue-next'
+import { ref, onMounted, onUnmounted } from 'vue'
+import { Loader2, AlertCircle, Circle } from 'lucide-vue-next'
 import StoryCard from './_components/StoryCard/StoryCard.vue'
+import * as ActionCable from '@rails/actioncable'
 import './App.css'
 
 interface Story {
@@ -16,8 +17,11 @@ interface Story {
 const stories = ref<Story[]>([])
 const loading = ref(true)
 const error = ref('')
+const online = ref(false)
+let cable: any = null
+let subscription: any = null
 
-async function fetchTopStories() {
+async function fetchStories() {
   loading.value = true
   error.value = ''
   try {
@@ -31,7 +35,51 @@ async function fetchTopStories() {
   }
 }
 
-onMounted(fetchTopStories)
+function connectCable() {
+  loading.value = true
+  error.value = ''
+  if (cable) {
+    cable.disconnect()
+    cable = null
+  }
+  cable = ActionCable.createConsumer('ws://localhost:3000/cable')
+  subscription = cable.subscriptions.create(
+    { channel: 'TopStoriesChannel' },
+    {
+      connected() {
+        online.value = true
+        loading.value = false
+      },
+      disconnected() {
+        online.value = false
+        error.value = 'Desconectado do servidor.'
+      },
+      received(data: Story[]) {
+        if (data[0] !== stories.value[0]) {
+          stories.value = data
+        }
+      },
+      rejected() {
+        online.value = false
+        error.value = 'Conexão rejeitada.'
+      },
+    },
+  )
+}
+
+function disconnectCable() {
+  if (cable) {
+    cable.disconnect()
+    cable = null
+  }
+}
+
+onMounted(async () => {
+  await fetchStories()
+  connectCable()
+})
+
+onUnmounted(disconnectCable)
 </script>
 
 <template>
@@ -39,9 +87,17 @@ onMounted(fetchTopStories)
     <header class="header">
       <div class="header-content">
         <h1 class="title">Hacker News</h1>
-        <button @click="fetchTopStories" class="refresh-btn" title="Atualizar">
-          <RefreshCw :size="18" />
-        </button>
+        <span
+          class="status-indicator"
+          :title="online ? 'Online e buscando atualizações' : 'Offline'"
+        >
+          <Circle
+            :size="16"
+            :color="online ? 'var(--success-fg)' : 'var(--danger-fg)'"
+            fill="currentColor"
+            class="animate-pulse"
+          />
+        </span>
       </div>
     </header>
 
@@ -54,7 +110,6 @@ onMounted(fetchTopStories)
       <div v-else-if="error" class="error">
         <AlertCircle :size="24" class="error-icon" />
         <p>{{ error }}</p>
-        <button @click="fetchTopStories" class="retry-btn">Tentar novamente</button>
       </div>
 
       <div v-else class="stories-container">
