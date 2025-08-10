@@ -16,7 +16,9 @@ const props = defineProps<{
 const isModalOpen = ref(false)
 
 const openCommentsModal = () => {
-  isModalOpen.value = true
+  if (props.kids && props.kids.length) {
+    isModalOpen.value = true
+  }
 }
 
 const closeModal = () => {
@@ -40,8 +42,8 @@ const closeModal = () => {
         <span class="separator">·</span>
         <div
           class="meta-item"
-          :class="{ 'comments-clickable': kids && kids.length > 0, 'comments-disabled': !kids || kids.length === 0 }"
-          @click="kids && kids.length > 0 ? openCommentsModal : null"
+          :class="kids && kids.length ? 'comments-clickable' : 'comments-disabled'"
+          @click="openCommentsModal"
         >
           <MessageSquare :size="14" />
           <span class="comments">{{ kids?.length || 0 }} comentários</span>
