@@ -39,6 +39,10 @@
   background-color: var(--bg-muted);
 }
 
+.comments-clickable:hover .comments {
+  text-decoration: underline;
+}
+
 .author {
   font-weight: 500;
 }
