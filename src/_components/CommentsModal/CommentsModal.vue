@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { defineProps, defineEmits } from 'vue'
+import { defineEmits } from 'vue'
 import { X } from 'lucide-vue-next'
 import './style.css'
 import CommentItem from './CommentItem.vue'
@@ -12,7 +12,7 @@ interface Comment {
   kids?: number[]
 }
 
-const props = defineProps<{
+defineProps<{
   isOpen: boolean
   rootComments: Comment[]
 }>()

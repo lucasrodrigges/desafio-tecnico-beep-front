@@ -7,14 +7,18 @@ import './App.css'
 import type { Story } from './_types/story'
 import _api from './_api'
 
+interface SubscriptionMixin {
+  unsubscribe(): void
+}
+
 const stories = ref<Story[]>([])
 const loading = ref(true)
 const error = ref('')
 const online = ref(false)
 const searchQuery = ref('')
 const isSearching = ref(false)
-let cable: any = null
-let subscription: any = null
+let cable: ActionCable.Consumer | null = null
+let subscription: SubscriptionMixin | null = null
 let searchTimeout: number | null = null
 
 async function fetchStories() {
@@ -64,20 +68,20 @@ function connectCable() {
   subscription = cable.subscriptions.create(
     { channel: 'TopStoriesChannel' },
     {
-      connected() {
+      connected(): void {
         online.value = true
         loading.value = false
       },
-      disconnected() {
+      disconnected(): void {
         online.value = false
         error.value = 'Desconectado do servidor.'
       },
-      received(data: Story[]) {
-        if (data[0] !== stories.value[0] && !searchQuery) {
+      received(data: Story[]): void {
+        if (data[0] !== stories.value[0] && !searchQuery.value) {
           stories.value = data
         }
       },
-      rejected() {
+      rejected(): void {
         online.value = false
         error.value = 'Conexão rejeitada.'
       },
@@ -86,6 +90,10 @@ function connectCable() {
 }
 
 function disconnectCable() {
+  if (subscription) {
+    subscription.unsubscribe()
+    subscription = null
+  }
   if (cable) {
     cable.disconnect()
     cable = null
