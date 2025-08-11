@@ -116,7 +116,32 @@
   margin-bottom: 0;
 }
 
-/* Responsividade */
+.comment-item {
+  transition: margin-left 0.2s;
+}
+
+.see-replies-btn {
+  margin-top: 8px;
+  background: none;
+  border: none;
+  color: var(--accent-primary, #007bff);
+  cursor: pointer;
+  font-size: 14px;
+  padding: 0;
+  text-decoration: underline;
+}
+
+.see-replies-btn:hover {
+  color: var(--accent-primary-hover, #0056b3);
+}
+
+.comment-replies {
+  margin-top: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
 @media (max-width: 768px) {
   .modal-overlay {
     padding: 10px;

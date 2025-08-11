@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import { defineProps, defineEmits, ref, watch } from 'vue'
-import { X } from 'lucide-vue-next'
+import { X, Loader2 } from 'lucide-vue-next'
 import './style.css'
+import CommentItem from './CommentItem.vue'
+import { computed } from 'vue'
 
 interface Comment {
   id: number
@@ -22,6 +24,14 @@ const emit = defineEmits<{
 
 const comments = ref<Comment[]>([])
 const isLoadingComments = ref(false)
+
+const rootComments = computed(() => {
+  const allKids = new Set<number>()
+  comments.value.forEach((c) => {
+    c.kids?.forEach((kid) => allKids.add(kid))
+  })
+  return comments.value.filter((c) => !allKids.has(c.id))
+})
 
 const fetchComments = async () => {
   if (!props.storyId) return
@@ -47,16 +57,6 @@ const closeModal = () => {
   comments.value = []
 }
 
-const formatDate = (timestamp: number) => {
-  return new Date(timestamp * 1000).toLocaleDateString('pt-BR', {
-    day: '2-digit',
-    month: '2-digit',
-    year: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
-  })
-}
-
 watch(
   () => props.isOpen,
   (newValue) => {
@@ -78,20 +78,26 @@ watch(
       </div>
 
       <div class="modal-body">
-        <div v-if="isLoadingComments" class="loading">Carregando comentários...</div>
+        <div
+          v-if="isLoadingComments"
+          class="loading"
+          style="display: flex; align-items: center; gap: 8px"
+        >
+          <Loader2 :size="20" class="animate-spin" />
+          Carregando comentários...
+        </div>
 
         <div v-else-if="comments.length === 0" class="no-comments">
           Nenhum comentário encontrado.
         </div>
 
         <div v-else class="comments-list">
-          <div v-for="comment in comments" :key="comment.id" class="comment-item">
-            <div class="comment-header">
-              <span class="comment-author">{{ comment.by }}</span>
-              <span class="comment-date">{{ formatDate(comment.time) }}</span>
-            </div>
-            <div class="comment-text" v-html="comment.text"></div>
-          </div>
+          <CommentItem
+            v-for="comment in rootComments"
+            :key="comment.id"
+            :comment="comment"
+            :level="0"
+          />
         </div>
       </div>
     </div>
