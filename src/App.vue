@@ -7,10 +7,6 @@ import './App.css'
 import type { Story } from './_types/story'
 import _api from './_api'
 
-interface SubscriptionMixin {
-  unsubscribe(): void
-}
-
 const stories = ref<Story[]>([])
 const loading = ref(true)
 const error = ref('')
@@ -18,7 +14,7 @@ const online = ref(false)
 const searchQuery = ref('')
 const isSearching = ref(false)
 let cable: ActionCable.Consumer | null = null
-let subscription: SubscriptionMixin | null = null
+let subscription: unknown = null
 let searchTimeout: number | null = null
 
 async function fetchStories() {
@@ -91,7 +87,7 @@ function connectCable() {
 
 function disconnectCable() {
   if (subscription) {
-    subscription.unsubscribe()
+    (subscription as { unsubscribe(): void }).unsubscribe()
     subscription = null
   }
   if (cable) {
