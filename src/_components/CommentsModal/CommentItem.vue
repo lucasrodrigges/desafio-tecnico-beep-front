@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { Loader2 } from 'lucide-vue-next'
+import _api from '../../_api'
 
 interface Comment {
   id: number
@@ -23,20 +24,10 @@ const hasReplies = props.comment.kids && props.comment.kids.length > 0
 
 const fetchReplies = async () => {
   if (!props.comment.kids || props.comment.kids.length === 0) return
-  isLoadingReplies.value = true
-  try {
-    const response = await fetch(
-      `${import.meta.env.VITE_API_BASE_URL}/hackernews/replies_at_comments?ids=${encodeURIComponent(props.comment.kids.join(','))}`,
-    )
-    const data = await response.json()
-    console.log({ data })
 
-    replies.value = data
-  } catch (error) {
-    replies.value = []
-  } finally {
-    isLoadingReplies.value = false
-  }
+  isLoadingReplies.value = true
+  replies.value = await _api.stories.fetchRepliesAtComments(props.comment.kids)
+  isLoadingReplies.value = false
 }
 
 const toggleReplies = async () => {

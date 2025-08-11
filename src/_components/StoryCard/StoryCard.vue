@@ -3,24 +3,9 @@ import { defineProps, ref } from 'vue'
 import { User, TrendingUp, ExternalLink, MessageSquare } from 'lucide-vue-next'
 import CommentsModal from '../CommentsModal/CommentsModal.vue'
 import './style.css'
+import type { Story } from '../../_types/story'
 
-interface Comment {
-  id: number
-  by: string
-  text: string
-  time: number
-  kids?: number[]
-}
-
-const props = defineProps<{
-  id: number
-  title: string
-  url: string
-  by: string
-  score: number
-  kids?: number[]
-  comments?: Comment[]
-}>()
+const props = defineProps<Story>()
 
 const isModalOpen = ref(false)
 

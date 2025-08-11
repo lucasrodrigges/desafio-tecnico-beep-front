@@ -4,24 +4,8 @@ import { Loader2, AlertCircle, Circle, Search } from 'lucide-vue-next'
 import StoryCard from './_components/StoryCard/StoryCard.vue'
 import * as ActionCable from '@rails/actioncable'
 import './App.css'
-
-interface Comment {
-  id: number
-  by: string
-  text: string
-  time: number
-  kids?: number[]
-}
-
-interface Story {
-  id: number
-  title: string
-  url: string
-  by: string
-  score: number
-  kids?: number[]
-  comments?: Comment[]
-}
+import type { Story } from './_types/story'
+import _api from './_api'
 
 const stories = ref<Story[]>([])
 const loading = ref(true)
@@ -35,16 +19,8 @@ let searchTimeout: number | null = null
 
 async function fetchStories() {
   loading.value = true
-  error.value = ''
-  try {
-    const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/hackernews/top_stories`)
-    if (!res.ok) throw new Error('Erro ao buscar notícias')
-    stories.value = await res.json()
-  } catch (e: any) {
-    error.value = e.message || 'Erro desconhecido'
-  } finally {
-    loading.value = false
-  }
+  stories.value = await _api.stories.fetchTopStories()
+  loading.value = false
 }
 
 async function searchStories(query: string) {
@@ -55,17 +31,8 @@ async function searchStories(query: string) {
 
   isSearching.value = true
   error.value = ''
-  try {
-    const res = await fetch(
-      `${import.meta.env.VITE_API_BASE_URL}/hackernews/search?query=${encodeURIComponent(query)}`,
-    )
-    if (!res.ok) throw new Error('Erro ao buscar notícias')
-    stories.value = await res.json()
-  } catch (e: any) {
-    error.value = e.message || 'Erro desconhecido'
-  } finally {
-    isSearching.value = false
-  }
+  stories.value = await _api.stories.searchStories(query)
+  isSearching.value = false
 }
 
 function debouncedSearch(query: string) {

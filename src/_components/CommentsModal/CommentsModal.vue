@@ -1,9 +1,8 @@
 <script setup lang="ts">
-import { defineProps, defineEmits, ref, watch } from 'vue'
-import { X, Loader2 } from 'lucide-vue-next'
+import { defineProps, defineEmits } from 'vue'
+import { X } from 'lucide-vue-next'
 import './style.css'
 import CommentItem from './CommentItem.vue'
-import { computed } from 'vue'
 
 interface Comment {
   id: number
