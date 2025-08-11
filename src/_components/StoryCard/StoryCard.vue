@@ -1,11 +1,22 @@
 <script setup lang="ts">
-import { defineProps, ref } from 'vue'
+import { ref } from 'vue'
 import { User, TrendingUp, ExternalLink, MessageSquare } from 'lucide-vue-next'
 import CommentsModal from '../CommentsModal/CommentsModal.vue'
 import './style.css'
-import type { Story } from '../../_types/story'
+import type { Story, Comment } from '../../_types/story'
 
-const props = defineProps<Story>()
+const props = defineProps({
+  by: { type: String, required: true },
+  descendants: { type: Number, required: true },
+  id: { type: Number, required: true },
+  kids: { type: Array, required: false },
+  score: { type: Number, required: true },
+  time: { type: Number, required: true },
+  title: { type: String, required: true },
+  type: { type: String, required: true },
+  url: { type: String, required: false },
+  comments: { type: Array<Comment>, required: false },
+})
 
 const isModalOpen = ref(false)
 
