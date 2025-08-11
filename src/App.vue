@@ -15,7 +15,7 @@ const searchQuery = ref('')
 const isSearching = ref(false)
 let cable: ActionCable.Consumer | null = null
 let subscription: unknown = null
-let searchTimeout: number | null = null
+let searchTimeout: ReturnType<typeof setTimeout> | null = null
 
 async function fetchStories() {
   loading.value = true
