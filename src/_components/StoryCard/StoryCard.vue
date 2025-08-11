@@ -4,6 +4,14 @@ import { User, TrendingUp, ExternalLink, MessageSquare } from 'lucide-vue-next'
 import CommentsModal from '../CommentsModal/CommentsModal.vue'
 import './style.css'
 
+interface Comment {
+  id: number
+  by: string
+  text: string
+  time: number
+  kids?: number[]
+}
+
 const props = defineProps<{
   id: number
   title: string
@@ -11,12 +19,13 @@ const props = defineProps<{
   by: string
   score: number
   kids?: number[]
+  comments?: Comment[]
 }>()
 
 const isModalOpen = ref(false)
 
 const openCommentsModal = () => {
-  if (props.kids && props.kids.length) {
+  if (props.comments && props.comments.length) {
     isModalOpen.value = true
   }
 }
@@ -41,12 +50,12 @@ const closeModal = () => {
         </div>
         <span class="separator">·</span>
         <div
-          class="meta-item"
-          :class="kids && kids.length ? 'comments-clickable' : 'comments-disabled'"
+          v-if="props.comments && props.comments.length > 0"
+          class="meta-item comments-clickable"
           @click="openCommentsModal"
         >
           <MessageSquare :size="14" />
-          <span class="comments">{{ kids?.length || 0 }} comentários</span>
+          <span class="comments">{{ props.comments.length }} comentários</span>
         </div>
       </div>
 
@@ -58,6 +67,10 @@ const closeModal = () => {
       </h3>
     </div>
 
-    <CommentsModal :is-open="isModalOpen" :story-id="id" @close="closeModal" />
+    <CommentsModal
+      :is-open="isModalOpen"
+      :root-comments="props.comments || []"
+      @close="closeModal"
+    />
   </li>
 </template>

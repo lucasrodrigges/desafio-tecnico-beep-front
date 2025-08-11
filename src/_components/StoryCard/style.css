@@ -43,13 +43,6 @@
   text-decoration: underline;
 }
 
-.comments-disabled {
-  cursor: default;
-  color: var(--fg-disabled, #b0b0b0);
-  background: none;
-  pointer-events: none;
-}
-
 .author {
   font-weight: 500;
 }

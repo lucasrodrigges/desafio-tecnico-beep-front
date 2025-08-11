@@ -5,6 +5,14 @@ import StoryCard from './_components/StoryCard/StoryCard.vue'
 import * as ActionCable from '@rails/actioncable'
 import './App.css'
 
+interface Comment {
+  id: number
+  by: string
+  text: string
+  time: number
+  kids?: number[]
+}
+
 interface Story {
   id: number
   title: string
@@ -12,6 +20,7 @@ interface Story {
   by: string
   score: number
   kids?: number[]
+  comments?: Comment[]
 }
 
 const stories = ref<Story[]>([])

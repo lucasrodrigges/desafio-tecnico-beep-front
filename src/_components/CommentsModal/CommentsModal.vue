@@ -15,56 +15,16 @@ interface Comment {
 
 const props = defineProps<{
   isOpen: boolean
-  storyId: number
+  rootComments: Comment[]
 }>()
 
 const emit = defineEmits<{
   close: []
 }>()
 
-const comments = ref<Comment[]>([])
-const isLoadingComments = ref(false)
-
-const rootComments = computed(() => {
-  const allKids = new Set<number>()
-  comments.value.forEach((c) => {
-    c.kids?.forEach((kid) => allKids.add(kid))
-  })
-  return comments.value.filter((c) => !allKids.has(c.id))
-})
-
-const fetchComments = async () => {
-  if (!props.storyId) return
-
-  isLoadingComments.value = true
-
-  try {
-    const response = await fetch(
-      `${import.meta.env.VITE_API_BASE_URL}/hackernews/${props.storyId}/relevant_comments`,
-    )
-    const data = await response.json()
-    comments.value = data
-  } catch (error) {
-    console.error('Erro ao carregar comentários:', error)
-    comments.value = []
-  } finally {
-    isLoadingComments.value = false
-  }
-}
-
 const closeModal = () => {
   emit('close')
-  comments.value = []
 }
-
-watch(
-  () => props.isOpen,
-  (newValue) => {
-    if (newValue) {
-      fetchComments()
-    }
-  },
-)
 </script>
 
 <template>
@@ -78,19 +38,9 @@ watch(
       </div>
 
       <div class="modal-body">
-        <div
-          v-if="isLoadingComments"
-          class="loading"
-          style="display: flex; align-items: center; gap: 8px"
-        >
-          <Loader2 :size="20" class="animate-spin" />
-          Carregando comentários...
-        </div>
-
-        <div v-else-if="comments.length === 0" class="no-comments">
+        <div v-if="!rootComments || rootComments.length === 0" class="no-comments">
           Nenhum comentário encontrado.
         </div>
-
         <div v-else class="comments-list">
           <CommentItem
             v-for="comment in rootComments"
