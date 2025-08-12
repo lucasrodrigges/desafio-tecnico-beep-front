@@ -13,9 +13,11 @@ const error = ref('')
 const online = ref(false)
 const searchQuery = ref('')
 const isSearching = ref(false)
+const isPageVisible = ref(!document.hidden)
 let cable: ActionCable.Consumer | null = null
 let subscription: unknown = null
 let searchTimeout: ReturnType<typeof setTimeout> | null = null
+let reconnectTimeout: ReturnType<typeof setTimeout> | null = null
 
 async function fetchStories() {
   loading.value = true
@@ -67,10 +69,16 @@ function connectCable() {
       connected(): void {
         online.value = true
         loading.value = false
+        if (reconnectTimeout) {
+          clearTimeout(reconnectTimeout)
+          reconnectTimeout = null
+        }
       },
       disconnected(): void {
         online.value = false
-        error.value = 'Desconectado do servidor.'
+        if (isPageVisible.value) {
+          error.value = 'Desconectado do servidor.'
+        }
       },
       received(data: Story[]): void {
         if (data[0] !== stories.value[0] && !searchQuery.value) {
@@ -87,18 +95,43 @@ function connectCable() {
 
 function disconnectCable() {
   if (subscription) {
-    (subscription as { unsubscribe(): void }).unsubscribe()
+    ;(subscription as { unsubscribe(): void }).unsubscribe()
     subscription = null
   }
   if (cable) {
     cable.disconnect()
     cable = null
   }
+  if (reconnectTimeout) {
+    clearTimeout(reconnectTimeout)
+    reconnectTimeout = null
+  }
+}
+
+function handleVisibilityChange() {
+  isPageVisible.value = !document.hidden
+
+  if (isPageVisible.value) {
+    if (!online.value) {
+      reconnectTimeout = setTimeout(() => {
+        connectCable()
+      }, 1000)
+    }
+    if (error.value === 'Desconectado do servidor.') {
+      error.value = ''
+    }
+  } else {
+    if (error.value === 'Desconectado do servidor.') {
+      error.value = ''
+    }
+  }
 }
 
 onMounted(async () => {
   await fetchStories()
   connectCable()
+
+  document.addEventListener('visibilitychange', handleVisibilityChange)
 })
 
 onUnmounted(() => {
@@ -106,6 +139,8 @@ onUnmounted(() => {
   if (searchTimeout) {
     clearTimeout(searchTimeout)
   }
+
+  document.removeEventListener('visibilitychange', handleVisibilityChange)
 })
 </script>
 
