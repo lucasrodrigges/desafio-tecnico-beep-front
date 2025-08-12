@@ -62,6 +62,17 @@ describe('StoryCard.vue', () => {
     expect(wrapper.find('a').attributes('href')).toBe(story.url)
   })
 
+  it('exibe a data de criação formatada corretamente', () => {
+    const expectedDate = new Date(story.time * 1000).toLocaleDateString('pt-BR', {
+      day: '2-digit',
+      month: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit'
+    })
+    expect(wrapper.text()).toContain(expectedDate)
+    expect(wrapper.find('.created-date').exists()).toBe(true)
+  })
+
   it('exibe o número de comentários quando há comentários', () => {
     expect(wrapper.text()).toContain('1 comentários')
     expect(wrapper.find('.comments').exists()).toBe(true)

@@ -47,6 +47,11 @@
   font-weight: 500;
 }
 
+.created-date {
+  color: var(--fg-muted);
+  font-size: 13px;
+}
+
 .separator {
   color: var(--fg-subtle);
 }

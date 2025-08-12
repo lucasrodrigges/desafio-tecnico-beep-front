@@ -44,7 +44,7 @@ function debouncedSearch(query: string) {
 
   searchTimeout = setTimeout(() => {
     searchStories(query)
-  }, 600)
+  }, 800)
 }
 
 watch(searchQuery, (newQuery) => {

@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { User, TrendingUp, ExternalLink, MessageSquare } from 'lucide-vue-next'
+import { User, TrendingUp, ExternalLink, MessageSquare, Calendar } from 'lucide-vue-next'
 import CommentsModal from '../CommentsModal/CommentsModal.vue'
 import './style.css'
-import type { Story, Comment } from '../../_types/story'
+import type { Comment } from '../../_types/story'
 
 const props = defineProps({
   by: { type: String, required: true },
@@ -38,6 +38,18 @@ const closeModal = () => {
         <div class="meta-item">
           <User :size="14" />
           <span class="author">{{ by }}</span>
+        </div>
+        <span class="separator">·</span>
+        <div class="meta-item">
+          <Calendar :size="14" />
+          <span class="created-date">{{
+            new Date(props.time * 1000).toLocaleDateString('pt-BR', {
+              day: '2-digit',
+              month: '2-digit',
+              hour: '2-digit',
+              minute: '2-digit',
+            })
+          }}</span>
         </div>
         <span class="separator">·</span>
         <div class="meta-item">
