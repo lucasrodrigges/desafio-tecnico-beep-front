@@ -39,8 +39,8 @@ const closeModal = () => {
           <User :size="14" />
           <span class="author">{{ by }}</span>
         </div>
-        <span class="separator">·</span>
-        <div class="meta-item">
+        <span class="separator date-separator">·</span>
+        <div class="meta-item date-meta">
           <Calendar :size="14" />
           <span class="created-date">{{
             new Date(props.time * 1000).toLocaleDateString('pt-BR', {
@@ -51,7 +51,7 @@ const closeModal = () => {
             })
           }}</span>
         </div>
-        <span class="separator">·</span>
+        <span class="separator date-separator">·</span>
         <div class="meta-item">
           <TrendingUp :size="14" />
           <span class="score">{{ score }} pontos</span>
