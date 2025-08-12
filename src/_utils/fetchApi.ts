@@ -13,8 +13,8 @@ export const handleDeviceId = (apiDeviceId?: string | null) => {
 export const handleAuthorization = (apiToken?: string | null) => {
   let token = apiToken;
 
-  if (token) {
-    const cleanToken = token.replace(/^Bearer\s+/i, '');
+  if (apiToken) {
+    const cleanToken = apiToken.replace(/^Bearer\s+/i, '');
     localStorage.setItem('session', cleanToken);
   } else {
     token = localStorage.getItem('session');

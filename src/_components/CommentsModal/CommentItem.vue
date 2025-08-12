@@ -1,15 +1,8 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref } from 'vue'
 import { Loader2 } from 'lucide-vue-next'
 import _api from '../../_api'
-
-interface Comment {
-  id: number
-  by: string
-  text: string
-  time: number
-  kids?: number[]
-}
+import type { Comment } from '../../_types/story'
 
 const props = defineProps<{
   comment: Comment
