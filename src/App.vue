@@ -184,6 +184,10 @@ onUnmounted(() => {
         <p>{{ error }}</p>
       </div>
 
+      <div v-else-if="stories.length === 0" class="no-stories">
+        <p>Nenhuma notícia encontrada</p>
+      </div>
+
       <div v-else class="stories-container">
         <ul class="stories-list">
           <StoryCard v-for="story in stories" :key="story.id" v-bind="story" />

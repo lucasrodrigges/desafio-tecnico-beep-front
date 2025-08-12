@@ -109,6 +109,22 @@
   margin: 0;
 }
 
+.no-stories {
+  padding: 20px;
+  text-align: center;
+  border-bottom: 1px solid var(--border-default);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.no-stories p {
+  font-size: 15px;
+  color: var(--fg-muted);
+  margin: 0;
+}
+
 .retry-btn {
   background: var(--btn-primary-bg);
   color: var(--fg-on-emphasis);
