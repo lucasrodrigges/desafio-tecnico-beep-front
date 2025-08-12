@@ -16,7 +16,8 @@ const mockComments = [
     id: 1,
     by: 'Usuário',
     text: 'Comentário 1',
-    time: 1234567890
+    time: 1234567890,
+    type: 'comment'
   }
 ]
 

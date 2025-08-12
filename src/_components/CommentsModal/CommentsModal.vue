@@ -3,14 +3,7 @@ import { defineEmits } from 'vue'
 import { X } from 'lucide-vue-next'
 import './style.css'
 import CommentItem from './CommentItem.vue'
-
-interface Comment {
-  id: number
-  by: string
-  text: string
-  time: number
-  kids?: number[]
-}
+import type { Comment } from '../../_types/story'
 
 defineProps<{
   isOpen: boolean
